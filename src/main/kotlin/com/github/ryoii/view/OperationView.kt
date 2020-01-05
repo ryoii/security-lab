@@ -4,6 +4,7 @@ import com.github.ryoii.controller.ImageController
 import com.github.ryoii.converter.RunButtonStateConverter
 import com.github.ryoii.converter.StateConverter
 import com.github.ryoii.model.ImageModel
+import javafx.beans.binding.Binding
 import tornadofx.*
 
 class OperationView : View() {
@@ -32,9 +33,8 @@ class OperationView : View() {
             fieldset("操作") {
                 button {
                     textProperty().bindBidirectional(imageModel.state, RunButtonStateConverter())
-                    setOnAction {
-                        imageController.runImage(imageModel.item)
-                    }
+                }.action {
+                    imageController.runImage(imageModel.item)
                 }
                 field("状态") {
                     label().textProperty().bindBidirectional(imageModel.state, StateConverter())

@@ -21,17 +21,15 @@ class InfoFragment : Fragment() {
                 field("启动命令") { textfield(image.command) }
             }
 
-            button("保存") {
-                setOnAction {
-                    if (image.item.id == null) {
-                        image.commit()
-                        imageControl.saveImages(image.item)
-                        imageControl.flush()
-                    } else {
-                        imageControl.updateImage(image.item)
-                    }
-                    this@InfoFragment.close()
+            button("保存").action {
+                if (image.item.id == null) {
+                    image.commit()
+                    imageControl.saveImages(image.item)
+                    imageControl.flush()
+                } else {
+                    imageControl.updateImage(image.item)
                 }
+                this@InfoFragment.close()
             }
         }
     }
