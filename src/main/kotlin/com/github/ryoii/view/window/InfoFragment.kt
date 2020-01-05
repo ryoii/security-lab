@@ -25,11 +25,8 @@ class InfoFragment : Fragment() {
                 setOnAction {
                     if (image.item.id == null) {
                         image.commit()
-                        println("commit done")
                         imageControl.saveImages(image.item)
-                        println("save done")
                         imageControl.flush()
-                        print("flush done")
                     } else {
                         imageControl.updateImage(image.item)
                     }
