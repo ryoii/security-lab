@@ -9,7 +9,6 @@ import tornadofx.observable
 
 class ImageController : Controller() {
 
-    val imageModel = ImageModel(null)
     val cache: ObservableList<Image> = getImages().observable()
 
     private fun getImages() = SQLiteConnector.queryImages()
