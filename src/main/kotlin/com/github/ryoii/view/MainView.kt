@@ -1,6 +1,7 @@
 package com.github.ryoii.view
 
 import com.github.ryoii.model.ImageModel
+import com.github.ryoii.view.window.EditFragment
 import com.github.ryoii.view.window.InfoFragment
 import javafx.stage.Modality
 import tornadofx.*
@@ -18,7 +19,7 @@ class MainView : View() {
                     )
                 }
                 item("编辑镜像").action {
-                    find<InfoFragment>(Scope(ImageModel())).openModal(
+                    find<EditFragment>(Scope()).openModal(
                         modality = Modality.APPLICATION_MODAL,
                         resizable = false
                     )

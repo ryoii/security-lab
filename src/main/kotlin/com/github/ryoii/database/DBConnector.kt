@@ -77,4 +77,11 @@ object SQLiteConnector {
             it.execute()
         }
     }
+
+    fun delete(image: Image) {
+        conn.prepareStatement("DELETE FROM IMAGE WHERE id = ?").use {
+            it.setInt(1, image.id!!)
+            it.execute()
+        }
+    }
 }

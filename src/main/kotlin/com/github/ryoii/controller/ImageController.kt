@@ -2,7 +2,6 @@ package com.github.ryoii.controller
 
 import com.github.ryoii.database.SQLiteConnector
 import com.github.ryoii.model.Image
-import com.github.ryoii.model.ImageModel
 import javafx.collections.ObservableList
 import tornadofx.Controller
 import tornadofx.observable
@@ -18,6 +17,8 @@ class ImageController : Controller() {
     fun updateImages(images: List<Image>) = SQLiteConnector.update(images)
 
     fun saveImages(image: Image) = SQLiteConnector.save(image)
+
+    fun deleteImage(image: Image) = SQLiteConnector.delete(image)
 
     fun flush() {
         cache.clear()
