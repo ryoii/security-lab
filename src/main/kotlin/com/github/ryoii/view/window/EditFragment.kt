@@ -39,16 +39,12 @@ class EditFragment : Fragment() {
                         alert(Alert.AlertType.CONFIRMATION, "确认删除", "正在删除：${imageModel.name.value}") {
                             if (result == ButtonType.OK) {
                                 imageController.deleteImage(imageModel.item)
-                                imageController.flush()
                             }
                         }
                     }
                     button("保存").action {
                         imageModel.commit()
-                        imageController.run {
-                            updateImage(imageModel.item)
-                            flush()
-                        }
+                        imageController.updateImage(imageModel.item)
                     }
                 }
             }

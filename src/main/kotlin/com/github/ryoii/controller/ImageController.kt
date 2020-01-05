@@ -12,17 +12,19 @@ class ImageController : Controller() {
 
     private fun getImages() = SQLiteConnector.queryImages()
 
-    fun updateImage(image: Image) = SQLiteConnector.update(image)
+    fun updateImage(image: Image) {
+        SQLiteConnector.update(image)
+        cache.setAll(getImages())
+    }
 
-    fun updateImages(images: List<Image>) = SQLiteConnector.update(images)
+    fun saveImages(image: Image) {
+        SQLiteConnector.save(image)
+        cache.setAll(getImages())
+    }
 
-    fun saveImages(image: Image) = SQLiteConnector.save(image)
-
-    fun deleteImage(image: Image) = SQLiteConnector.delete(image)
-
-    fun flush() {
-        cache.clear()
-        cache.addAll(getImages())
+    fun deleteImage(image: Image) {
+        SQLiteConnector.delete(image)
+        cache.setAll(getImages())
     }
 
     fun runImage(image: Image) {

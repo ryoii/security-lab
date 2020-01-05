@@ -22,13 +22,8 @@ class InfoFragment : Fragment() {
             }
 
             button("保存").action {
-                if (image.item.id == null) {
-                    image.commit()
-                    imageControl.saveImages(image.item)
-                    imageControl.flush()
-                } else {
-                    imageControl.updateImage(image.item)
-                }
+                image.commit()
+                imageControl.saveImages(image.item)
                 this@InfoFragment.close()
             }
         }
