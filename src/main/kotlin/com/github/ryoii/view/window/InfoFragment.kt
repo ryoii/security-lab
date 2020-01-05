@@ -6,8 +6,8 @@ import tornadofx.*
 
 class InfoFragment : Fragment() {
 
-    private val imageControl: ImageController by inject(DefaultScope)
-    private val image: ImageModel by inject()
+    private val imageControl by inject<ImageController>(DefaultScope)
+    private val image by inject<ImageModel>()
 
     override val root = flowpane {
 

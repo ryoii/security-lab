@@ -6,8 +6,8 @@ import tornadofx.*
 
 class DirectoryView : View() {
 
-    private val imageController: ImageController by inject()
-    private val imageModel: ImageModel by inject()
+    private val imageController by inject<ImageController>()
+    private val imageModel by inject<ImageModel>()
 
     override val root = vbox {
 
