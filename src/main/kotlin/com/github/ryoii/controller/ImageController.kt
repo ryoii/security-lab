@@ -27,22 +27,22 @@ class ImageController : Controller() {
         cache.setAll(getImages())
     }
 
-    fun runImage(image: Image) {
+    fun runImage(image: Image): String =
         if (image.state) {
             // 停止镜像
-            Runtime.getRuntime().exec("docker stop ${image.containerID}")
-            image.state = false
-            image.host = ""
+            Runtime.getRuntime().exec("docker stop ${image.containerID}").inputStream.use {
+                image.state = false
+                image.host = ""
+                image.containerID = ""
+                return@use String(it.readAllBytes())
+            }
         } else {
-            // 启动镜像
-            println(image.command)
             Runtime.getRuntime().exec(image.command).inputStream.use {
                 val res = String(it.readAllBytes())
-                image.host = "192.168.99.100"
                 image.state = true
+                image.host = "192.168.99.100"
                 image.containerID = res
-                println(image.containerID)
+                return@use res
             }
         }
-    }
 }
