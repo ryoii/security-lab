@@ -37,7 +37,7 @@ object SQLiteConnector {
                 list.add(
                     Experiment(
                         id = getInt("id"),
-                        name = getString("name"),
+                        name = getString("exp_name"),
                         imageName = getString("image_name"),
                         containerName = getString("container_name"),
                         description = getString("description"),
@@ -52,14 +52,14 @@ object SQLiteConnector {
     }
 
     fun update(experiment: Experiment) {
-        conn.prepareStatement("UPDATE EXPERIMENT SET name=?,image_name=?,container_name=?,description=?,port_map=?,mount=?,homepage=? WHERE id=?")
+        conn.prepareStatement("UPDATE EXPERIMENT SET exp_name=?,image_name=?,container_name=?,description=?,port_map=?,mount=?,homepage=? WHERE id=?")
             .use {
                 it.write(experiment).writeId(experiment, 8).executeUpdate()
             }
     }
 
     fun update(experiments: List<Experiment>) {
-        conn.prepareStatement("UPDATE EXPERIMENT SET name=?,image_name=?,container_name=?,description=?,port_map=?,mount=?,homepage=? WHERE id=?")
+        conn.prepareStatement("UPDATE EXPERIMENT SET exp_name=?,image_name=?,container_name=?,description=?,port_map=?,mount=?,homepage=? WHERE id=?")
             .use {
                 experiments.forEach { experiment: Experiment -> it.write(experiment).writeId(experiment, 8).addBatch() }
                 it.executeBatch()
@@ -81,12 +81,12 @@ object SQLiteConnector {
         this.apply { setInt(index, experiment.id!!) }
 
     fun save(experiment: Experiment) {
-        conn.prepareStatement("INSERT INTO EXPERIMENT(name,image_name,container_name,description,port_map,mount,homepage) VALUES (?,?,?,?,?,?,?)")
+        conn.prepareStatement("INSERT INTO EXPERIMENT(exp_name,image_name,container_name,description,port_map,mount,homepage) VALUES (?,?,?,?,?,?,?)")
             .use { it.write(experiment).execute() }
     }
 
     fun delete(experiment: Experiment) {
-        conn.prepareStatement("DELETE FROM IMAGE WHERE id = ?")
+        conn.prepareStatement("DELETE FROM EXPERIMENT WHERE id = ?")
             .use { it.writeId(experiment, 1).execute() }
     }
 }

@@ -1,5 +1,6 @@
 package com.github.ryoii.view
 
+import com.github.ryoii.model.Experiment
 import com.github.ryoii.model.ExperimentModel
 import com.github.ryoii.view.window.EditFragment
 import com.github.ryoii.view.window.InfoFragment
@@ -13,7 +14,7 @@ class MainView : View() {
         top = menubar {
             menu("实验") {
                 item("添加实验").action {
-                    find<InfoFragment>(Scope(ExperimentModel())).openModal(
+                    find<InfoFragment>(Scope(ExperimentModel(Experiment()))).openModal(
                         modality = Modality.APPLICATION_MODAL,
                         resizable = false
                     )
