@@ -3,6 +3,7 @@ package com.github.ryoii.view
 import com.github.ryoii.converter.RunButtonStateConverter
 import com.github.ryoii.converter.StateConverter
 import com.github.ryoii.model.ExperimentModel
+import com.github.ryoii.model.GlobalInfoModel
 import javafx.scene.layout.Background
 import tornadofx.*
 import java.awt.Desktop
@@ -10,6 +11,7 @@ import java.net.URI
 
 class OperationView : View() {
 
+    private val globalInfo = find<GlobalInfoModel>().item
     private val experimentModel by inject<ExperimentModel>()
 
     override val root = vbox {
@@ -31,8 +33,11 @@ class OperationView : View() {
                 }
                 field("主页") {
                     hyperlink(experimentModel.homepage).action {
-                        // TODO: generator complete homepage url
-                        Desktop.getDesktop().browse(URI.create(experimentModel.homepage.value))
+                        if (experimentModel.item.state) {
+                            Desktop.getDesktop().browse(URI(
+                                "http://${globalInfo.dockerMachineIp}${experimentModel.homepage.value}"
+                            ))
+                        }
                     }
                 }
             }

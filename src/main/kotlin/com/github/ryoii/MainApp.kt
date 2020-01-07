@@ -1,7 +1,9 @@
 package com.github.ryoii
 
+import com.github.ryoii.model.GlobalInfoModel
 import com.github.ryoii.view.MainView
 import tornadofx.App
+import tornadofx.find
 import tornadofx.launch
 
 fun main(args: Array<String>) {
@@ -10,5 +12,13 @@ fun main(args: Array<String>) {
 }
 
 class MainApp: App(MainView::class) {
+
+    private val global = find<GlobalInfoModel>()
+
+    override fun init() {
+        super.init()
+        //TODO fetch global info
+        println(global.item)
+    }
 
 }
