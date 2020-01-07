@@ -1,7 +1,7 @@
 package com.github.ryoii.view.window
 
-import com.github.ryoii.controller.ImageController
-import com.github.ryoii.model.ImageModel
+import com.github.ryoii.controller.ExperimentController
+import com.github.ryoii.model.ExperimentModel
 import com.github.ryoii.view.DirectoryView
 import javafx.scene.control.Alert
 import javafx.scene.control.ButtonType
@@ -9,8 +9,8 @@ import tornadofx.*
 
 class EditFragment : Fragment() {
 
-    private val imageController by inject<ImageController>(DefaultScope)
-    private val imageModel by inject<ImageModel>()
+    private val experimentController by inject<ExperimentController>(DefaultScope)
+    private val experimentModel by inject<ExperimentModel>()
 
     override val root = borderpane {
 
@@ -23,28 +23,28 @@ class EditFragment : Fragment() {
             form {
                 enableWhen(toggle.selectedProperty())
 
-                fieldset("项目信息") {
-                    field("项目名") { textfield(imageModel.name) }
-                    field("镜像名") { textfield(imageModel.imageName) }
+                fieldset("实验信息") {
+                    field("实验名") { textfield(experimentModel.name) }
+                    field("镜像名") { textfield(experimentModel.imageName) }
                 }
                 fieldset("描述") {
-                    textarea(imageModel.description) { isWrapText = true }
+                    textarea(experimentModel.description) { isWrapText = true }
                 }
                 fieldset("启动信息") {
-                    field("启动命令") { textfield(imageModel.command) }
+                    field("启动命令") { textfield(experimentModel.command) }
                 }
 
                 buttonbar {
                     button("删除").action {
-                        alert(Alert.AlertType.CONFIRMATION, "确认删除", "正在删除：${imageModel.name.value}") {
+                        alert(Alert.AlertType.CONFIRMATION, "确认删除", "正在删除：${experimentModel.name.value}") {
                             if (result == ButtonType.OK) {
-                                imageController.deleteImage(imageModel.item)
+                                experimentController.deleteExperiment(experimentModel.item)
                             }
                         }
                     }
                     button("保存").action {
-                        imageModel.commit()
-                        imageController.updateImage(imageModel.item)
+                        experimentModel.commit()
+                        experimentController.updateExperiment(experimentModel.item)
                     }
                 }
             }

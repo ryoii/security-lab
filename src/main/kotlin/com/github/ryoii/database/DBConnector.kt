@@ -1,6 +1,6 @@
 package com.github.ryoii.database
 
-import com.github.ryoii.model.Image
+import com.github.ryoii.model.Experiment
 import java.sql.Connection
 import java.sql.DriverManager
 import java.sql.PreparedStatement
@@ -27,12 +27,12 @@ object SQLiteConnector {
         }
     }
 
-    fun queryImages(): List<Image> {
-        val list = ArrayList<Image>()
+    fun queryExperiments(): List<Experiment> {
+        val list = ArrayList<Experiment>()
         conn.createStatement().executeQuery("SELECT * FROM IMAGE").apply {
             while (next()) {
                 list.add(
-                    Image(
+                    Experiment(
                         id = getInt("id"),
                         name = getString("name"),
                         imageName = getString("image_name"),
@@ -45,42 +45,42 @@ object SQLiteConnector {
         return list
     }
 
-    fun update(image: Image) {
+    fun update(experiment: Experiment) {
         conn.prepareStatement("UPDATE IMAGE SET name=?,image_name=?,command=?,description=? WHERE id=?").use {
-            it.write(image).executeUpdate()
+            it.write(experiment).executeUpdate()
         }
     }
 
-    fun update(images: List<Image>) {
+    fun update(experiments: List<Experiment>) {
         conn.prepareStatement("UPDATE IMAGE SET name=?,image_name=?,command=?,description=? WHERE id=?").use {
-            images.forEach { image: Image -> it.write(image).addBatch() }
+            experiments.forEach { experiment: Experiment -> it.write(experiment).addBatch() }
             it.executeBatch()
         }
     }
 
-    private fun PreparedStatement.write(image: Image) =
+    private fun PreparedStatement.write(experiment: Experiment) =
         this.apply {
-            setString(1, image.name)
-            setString(2, image.imageName)
-            setString(3, image.command)
-            setString(4, image.description)
-            setInt(5, image.id!!)
+            setString(1, experiment.name)
+            setString(2, experiment.imageName)
+            setString(3, experiment.command)
+            setString(4, experiment.description)
+            setInt(5, experiment.id!!)
         }
 
 
-    fun save(image: Image) {
+    fun save(experiment: Experiment) {
         conn.prepareStatement("INSERT INTO IMAGE(name, image_name, command, description) VALUES (?,?,?,?)").use {
-            it.setString(1, image.name)
-            it.setString(2, image.imageName)
-            it.setString(3, image.command)
-            it.setString(4, image.description)
+            it.setString(1, experiment.name)
+            it.setString(2, experiment.imageName)
+            it.setString(3, experiment.command)
+            it.setString(4, experiment.description)
             it.execute()
         }
     }
 
-    fun delete(image: Image) {
+    fun delete(experiment: Experiment) {
         conn.prepareStatement("DELETE FROM IMAGE WHERE id = ?").use {
-            it.setInt(1, image.id!!)
+            it.setInt(1, experiment.id!!)
             it.execute()
         }
     }

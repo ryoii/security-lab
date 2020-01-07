@@ -9,7 +9,7 @@ import tornadofx.setValue
 /**
  * docker镜像数据对象
  */
-class Image() {
+class Experiment() {
 
     constructor(id: Int, name: String, imageName: String, command: String, description: String) : this() {
         this.id = id
@@ -58,14 +58,14 @@ class Image() {
     var containerID = ""
 }
 
-class ImageModel(image: Image?) : ItemViewModel<Image>(image) {
+class ExperimentModel(experiment: Experiment?) : ItemViewModel<Experiment>(experiment) {
 
-    constructor(): this(Image())
+    constructor(): this(Experiment())
 
-    val name = bind(Image::nameProperty)
-    val imageName = bind(Image::imageNameProperty)
-    val command = bind(Image::commandProperty)
-    val description = bind(Image::descriptionProperty)
-    val state = bind(Image::stateProperty)
-    val host = bind(Image::hostProperty)
+    val name = bind(Experiment::nameProperty)
+    val imageName = bind(Experiment::imageNameProperty)
+    val command = bind(Experiment::commandProperty)
+    val description = bind(Experiment::descriptionProperty)
+    val state = bind(Experiment::stateProperty)
+    val host = bind(Experiment::hostProperty)
 }

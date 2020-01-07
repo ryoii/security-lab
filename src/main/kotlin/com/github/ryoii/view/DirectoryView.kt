@@ -1,17 +1,17 @@
 package com.github.ryoii.view
 
-import com.github.ryoii.controller.ImageController
-import com.github.ryoii.model.ImageModel
+import com.github.ryoii.controller.ExperimentController
+import com.github.ryoii.model.ExperimentModel
 import tornadofx.*
 
 class DirectoryView : View() {
 
-    private val imageController by inject<ImageController>()
-    private val imageModel by inject<ImageModel>()
+    private val experimentController by inject<ExperimentController>()
+    private val experimentModel by inject<ExperimentModel>()
 
     override val root = vbox {
 
-        listview(imageController.cache) {
+        listview(experimentController.cache) {
 
             fitToParentHeight()
 
@@ -19,7 +19,7 @@ class DirectoryView : View() {
                 text = it.name
             }
 
-            imageModel.rebindOnChange(this) { image ->
+            experimentModel.rebindOnChange(this) { image ->
                 item = image
             }
         }

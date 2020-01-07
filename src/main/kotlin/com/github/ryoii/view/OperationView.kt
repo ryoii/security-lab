@@ -1,46 +1,45 @@
 package com.github.ryoii.view
 
-import com.github.ryoii.controller.ImageController
+import com.github.ryoii.controller.ExperimentController
 import com.github.ryoii.converter.RunButtonStateConverter
 import com.github.ryoii.converter.StateConverter
-import com.github.ryoii.model.ImageModel
-import javafx.beans.binding.Binding
+import com.github.ryoii.model.ExperimentModel
 import tornadofx.*
 
 class OperationView : View() {
 
-    private val imageController by inject<ImageController>()
-    private val imageModel by inject<ImageModel>()
+    private val experimentController by inject<ExperimentController>()
+    private val experimentModel by inject<ExperimentModel>()
 
     override val root = vbox {
 
         minWidth = 600.0
 
         form {
-            visibleProperty().bind(imageModel.empty.not())
+            visibleProperty().bind(experimentModel.empty.not())
             spacing = 10.0
 
-            fieldset("项目信息") {
-                text(imageModel.name)
+            fieldset("实验信息") {
+                text(experimentModel.name)
             }
 
             fieldset("描述") {
-                label(imageModel.description) {
+                label(experimentModel.description) {
                     isWrapText = true
                 }
             }
             separator()
             fieldset("操作") {
                 button {
-                    textProperty().bindBidirectional(imageModel.state, RunButtonStateConverter())
+                    textProperty().bindBidirectional(experimentModel.state, RunButtonStateConverter())
                 }.action {
-                    imageController.runImage(imageModel.item)
+                    experimentController.runExperiment(experimentModel.item)
                 }
                 field("状态") {
-                    label().textProperty().bindBidirectional(imageModel.state, StateConverter())
+                    label().textProperty().bindBidirectional(experimentModel.state, StateConverter())
                 }
                 field("IP地址") {
-                    text(imageModel.host)
+                    text(experimentModel.host)
                 }
             }
         }

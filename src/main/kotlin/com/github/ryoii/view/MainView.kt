@@ -1,6 +1,6 @@
 package com.github.ryoii.view
 
-import com.github.ryoii.model.ImageModel
+import com.github.ryoii.model.ExperimentModel
 import com.github.ryoii.view.window.EditFragment
 import com.github.ryoii.view.window.InfoFragment
 import javafx.stage.Modality
@@ -11,14 +11,14 @@ class MainView : View() {
     override val root = borderpane {
 
         top = menubar {
-            menu("镜像") {
-                item("添加镜像").action {
-                    find<InfoFragment>(Scope(ImageModel())).openModal(
+            menu("实验") {
+                item("添加实验").action {
+                    find<InfoFragment>(Scope(ExperimentModel())).openModal(
                         modality = Modality.APPLICATION_MODAL,
                         resizable = false
                     )
                 }
-                item("编辑镜像").action {
+                item("编辑实验").action {
                     find<EditFragment>(Scope()).openModal(
                         modality = Modality.APPLICATION_MODAL,
                         resizable = false
