@@ -78,7 +78,7 @@ class Experiment() {
 
 class ExperimentModel(experiment: Experiment?) : ItemViewModel<Experiment>(experiment) {
 
-    constructor() : this(Experiment())
+    constructor() : this(null)
 
     val name = bind(Experiment::nameProperty)
     val imageName = bind(Experiment::imageNameProperty)

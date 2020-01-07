@@ -20,33 +20,16 @@ class EditFragment : Fragment() {
 
             val toggle = togglebutton("编辑", selectFirst = false)
 
-            form {
+            button("删除").action {
+                alert(Alert.AlertType.CONFIRMATION, "确认删除", "正在删除：${experimentModel.name.value}") {
+                    if (result == ButtonType.OK) {
+                        experimentController.deleteExperiment(experimentModel.item)
+                    }
+                }
+            }
+
+            this += find<InfoFragment>(scope).root.apply {
                 enableWhen(toggle.selectedProperty())
-
-                fieldset("实验信息") {
-                    field("实验名") { textfield(experimentModel.name) }
-                    field("镜像名") { textfield(experimentModel.imageName) }
-                }
-                fieldset("描述") {
-                    textarea(experimentModel.description) { isWrapText = true }
-                }
-                fieldset("启动信息") {
-                    //field("启动命令") { textfield(experimentModel.command) }
-                }
-
-                buttonbar {
-                    button("删除").action {
-                        alert(Alert.AlertType.CONFIRMATION, "确认删除", "正在删除：${experimentModel.name.value}") {
-                            if (result == ButtonType.OK) {
-                                experimentController.deleteExperiment(experimentModel.item)
-                            }
-                        }
-                    }
-                    button("保存").action {
-                        experimentModel.commit()
-                        experimentController.updateExperiment(experimentModel.item)
-                    }
-                }
             }
         }
     }
