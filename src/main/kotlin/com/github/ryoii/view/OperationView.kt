@@ -1,14 +1,15 @@
 package com.github.ryoii.view
 
-import com.github.ryoii.controller.ExperimentController
 import com.github.ryoii.converter.RunButtonStateConverter
 import com.github.ryoii.converter.StateConverter
 import com.github.ryoii.model.ExperimentModel
+import javafx.scene.layout.Background
 import tornadofx.*
+import java.awt.Desktop
+import java.net.URI
 
 class OperationView : View() {
 
-    private val experimentController by inject<ExperimentController>()
     private val experimentModel by inject<ExperimentModel>()
 
     override val root = vbox {
@@ -17,29 +18,38 @@ class OperationView : View() {
 
         form {
             visibleProperty().bind(experimentModel.empty.not())
-            spacing = 10.0
 
-            fieldset("实验信息") {
-                text(experimentModel.name)
+            fieldset {
+                textProperty.bindBidirectional(experimentModel.name)
+            }
+
+            separator()
+
+            fieldset("状态") {
+                field("运行状态") {
+                    label().textProperty().bindBidirectional(experimentModel.state, StateConverter())
+                }
+                field("主页") {
+                    hyperlink(experimentModel.homepage).action {
+                        // TODO: generator complete homepage url
+                        Desktop.getDesktop().browse(URI.create(experimentModel.homepage.value))
+                    }
+                }
             }
 
             fieldset("描述") {
-                label(experimentModel.description) {
+                textarea(experimentModel.description) {
+                    background = Background.EMPTY
+                    isEditable = false
                     isWrapText = true
                 }
             }
-            separator()
-            fieldset("操作") {
+
+            buttonbar {
                 button {
                     textProperty().bindBidirectional(experimentModel.state, RunButtonStateConverter())
                 }.action {
-                    //experimentController.runExperiment(experimentModel.item)
-                }
-                field("状态") {
-                    label().textProperty().bindBidirectional(experimentModel.state, StateConverter())
-                }
-                field("IP地址") {
-                    //text(experimentModel.host)
+
                 }
             }
         }
