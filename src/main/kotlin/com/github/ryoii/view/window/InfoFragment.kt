@@ -18,7 +18,7 @@ class InfoFragment : Fragment() {
                 field("描述") { textarea(experimentModel.description) }
             }
             fieldset("启动信息") {
-                field("启动命令") { textfield(experimentModel.command) }
+                //field("启动命令") { textfield(experimentModel.command) }
             }
 
             button("保存").action {

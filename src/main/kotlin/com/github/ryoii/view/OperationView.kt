@@ -33,13 +33,13 @@ class OperationView : View() {
                 button {
                     textProperty().bindBidirectional(experimentModel.state, RunButtonStateConverter())
                 }.action {
-                    experimentController.runExperiment(experimentModel.item)
+                    //experimentController.runExperiment(experimentModel.item)
                 }
                 field("状态") {
                     label().textProperty().bindBidirectional(experimentModel.state, StateConverter())
                 }
                 field("IP地址") {
-                    text(experimentModel.host)
+                    //text(experimentModel.host)
                 }
             }
         }

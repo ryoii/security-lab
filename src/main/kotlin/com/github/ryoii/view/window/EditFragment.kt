@@ -31,7 +31,7 @@ class EditFragment : Fragment() {
                     textarea(experimentModel.description) { isWrapText = true }
                 }
                 fieldset("启动信息") {
-                    field("启动命令") { textfield(experimentModel.command) }
+                    //field("启动命令") { textfield(experimentModel.command) }
                 }
 
                 buttonbar {
