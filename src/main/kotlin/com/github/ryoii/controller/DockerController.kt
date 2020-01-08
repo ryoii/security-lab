@@ -1,6 +1,7 @@
 package com.github.ryoii.controller
 
-import com.github.ryoii.event.*
+import com.github.ryoii.event.RunExperimentEvent
+import com.github.ryoii.event.StopExperimentEvent
 import com.github.ryoii.model.ContainerModel
 import com.github.ryoii.model.Experiment
 import com.github.ryoii.model.GlobalInfoModel
@@ -22,11 +23,11 @@ class DockerController : Controller() {
 
         /* 实验事件注册 */
         subscribe<RunExperimentEvent> {
-
+            runContainer(it.experiment)
         }
 
         subscribe<StopExperimentEvent> {
-
+            stopContainer(it.experiment)
         }
     }
 
@@ -43,7 +44,7 @@ class DockerController : Controller() {
                     startContainer(experiment)
                 }
                 404 -> {
-                    // no such image
+                    pullImage(experiment)
                 }
                 409 -> {
                     // conflict, maybe the container name has been used
@@ -54,9 +55,10 @@ class DockerController : Controller() {
 
     private fun startContainer(experiment: Experiment) {
         api.post("/containers/${experiment.containerID}/start").let {
-            when(it.statusCode) {
+            when (it.statusCode) {
                 204 -> {
-                    // No problem
+                    // can't change ui in background thread
+                    // experiment.state = true
                 }
                 304 -> {
                     // already start
@@ -72,7 +74,8 @@ class DockerController : Controller() {
         api.post("/containers/${experiment.containerID}/stop").let {
             when (it.statusCode) {
                 204 -> {
-                    // No problem
+                    // can't change ui in background thread
+                    // experiment.state = false
                 }
                 304 -> {
                     // already stop
@@ -92,7 +95,8 @@ class DockerController : Controller() {
         api.post("/images/create?fromImage=${experiment.imageName}&tag=latest").let {
             when(it.statusCode) {
                 200 -> {
-                    // no problem
+//                  image pull is a keep alive request
+                    runContainer(experiment)
                 }
                 404 -> {
                     // image does not exist or can't read image
