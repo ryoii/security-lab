@@ -1,8 +1,8 @@
 package com.github.ryoii.controller
 
-import com.github.ryoii.model.GlobalInfoModel
 import com.github.ryoii.model.ContainerModel
 import com.github.ryoii.model.Experiment
+import com.github.ryoii.model.GlobalInfoModel
 import com.github.ryoii.rest.requester.HttpsURLEngine
 import tornadofx.Controller
 import tornadofx.Rest
@@ -23,15 +23,46 @@ class DockerController : Controller() {
     /*******************************************
      * Container API
      *******************************************/
-    fun runContainer(experiment: Experiment): String? {
+    fun runContainer(experiment: Experiment) {
         val container = ContainerModel(experiment)
         val query = if (container.name.isBlank()) "" else "?name=${container.name}"
-        container.id = api.post("/containers/create${query}", container).one().getString("Id")
-        val statusCode = api.post("/containers/${container.id}/start").statusCode
-        return "[$statusCode]${container.id}"
+        api.post("/containers/create${query}", container).let {
+            when (it.statusCode) {
+                201 -> {
+                    container.id = it.one().getString("Id")
+                    startContainer(container.id)
+                }
+                // TODO 404, no such image
+                // TODO 409, conflict, maybe the container name has been used
+            }
+        }
+    }
+
+    private fun startContainer(containerId: String) {
+        api.post("/containers/${containerId}/start").statusCode
     }
 
     fun stopContainer(experiment: Experiment) {
+        api.post("/containers/${experiment.containerID}/stop").let {
+            when(it.statusCode) {
+                204 -> {
+                    // No problem
+                }
+                304 -> {
+                    // already stop
+                }
+                404 -> {
+                    // no such container
+                }
+            }
+        }
+    }
 
+    /*******************************************
+     * Image API
+     *******************************************/
+    private fun pullImage(experiment: Experiment) {
+        // TODO remove tag arg
+        api.post("/images/create?fromImage=${experiment.imageName}&tag=latest")
     }
 }
