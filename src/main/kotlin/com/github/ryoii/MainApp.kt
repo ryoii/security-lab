@@ -1,5 +1,6 @@
 package com.github.ryoii
 
+import com.github.ryoii.controller.DockerController
 import com.github.ryoii.model.GlobalInfoModel
 import com.github.ryoii.view.MainView
 import tornadofx.App
@@ -17,6 +18,8 @@ class MainApp: App(MainView::class) {
 
     override fun init() {
         super.init()
+        find<DockerController>()
+
         //TODO fetch global info
         println(global.item)
     }
