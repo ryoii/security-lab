@@ -1,7 +1,5 @@
 package com.github.ryoii.view
 
-import com.github.ryoii.converter.RunButtonStateConverter
-import com.github.ryoii.converter.StateConverter
 import com.github.ryoii.model.ExperimentModel
 import com.github.ryoii.model.GlobalInfoModel
 import javafx.scene.layout.Background
@@ -29,7 +27,7 @@ class OperationView : View() {
 
             fieldset("状态") {
                 field("运行状态") {
-                    label().textProperty().bindBidirectional(experimentModel.state, StateConverter())
+                    label(stringBinding(experimentModel.state) { if (value) "运行中" else "未运行" })
                 }
                 field("主页") {
                     hyperlink(experimentModel.homepage).action {
@@ -51,9 +49,7 @@ class OperationView : View() {
             }
 
             buttonbar {
-                button {
-                    textProperty().bindBidirectional(experimentModel.state, RunButtonStateConverter())
-                }.action {
+                button(stringBinding(experimentModel.state) { if (value) "停止" else "运行" }).action {
 
                 }
             }
