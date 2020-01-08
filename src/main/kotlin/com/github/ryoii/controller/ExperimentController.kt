@@ -1,6 +1,8 @@
 package com.github.ryoii.controller
 
 import com.github.ryoii.database.SQLiteConnector
+import com.github.ryoii.event.RunExperimentEvent
+import com.github.ryoii.event.StopExperimentEvent
 import com.github.ryoii.model.Experiment
 import javafx.collections.ObservableList
 import tornadofx.Controller
@@ -25,5 +27,13 @@ class ExperimentController : Controller() {
     fun deleteExperiment(experiment: Experiment) {
         SQLiteConnector.delete(experiment)
         cache.setAll(getExperiments())
+    }
+
+    fun runExperiment(experiment: Experiment) {
+        fire(RunExperimentEvent(experiment))
+    }
+
+    fun stopExperiment(experiment: Experiment) {
+        fire(StopExperimentEvent(experiment))
     }
 }
