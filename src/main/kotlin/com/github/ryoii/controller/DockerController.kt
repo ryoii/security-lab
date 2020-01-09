@@ -1,13 +1,13 @@
 package com.github.ryoii.controller
 
-import com.github.ryoii.event.RunExperimentEvent
-import com.github.ryoii.event.StopExperimentEvent
+import com.github.ryoii.event.*
 import com.github.ryoii.model.ContainerModel
 import com.github.ryoii.model.Experiment
 import com.github.ryoii.model.GlobalInfoModel
 import com.github.ryoii.rest.requester.HttpsURLEngine
-import tornadofx.Controller
-import tornadofx.Rest
+import tornadofx.*
+import java.io.BufferedReader
+import java.io.InputStreamReader
 import java.util.*
 
 class DockerController : Controller() {
@@ -43,12 +43,8 @@ class DockerController : Controller() {
                     container.id = it.one().getString("Id")
                     startContainer(experiment)
                 }
-                404 -> {
-                    pullImage(experiment)
-                }
-                409 -> {
-                    // conflict, maybe the container name has been used
-                }
+                404 -> pullImage(experiment) // 无法创建容器，镜像不存在
+                409 -> fire(ContainerNameConflictEvent(experiment)) // 容器名冲突，实验已运行，或实验设置的容器名冲突
             }
         }
     }
@@ -56,16 +52,9 @@ class DockerController : Controller() {
     private fun startContainer(experiment: Experiment) {
         api.post("/containers/${experiment.containerID}/start").let {
             when (it.statusCode) {
-                204 -> {
-                    // can't change ui in background thread
-                    // experiment.state = true
-                }
-                304 -> {
-                    // already start
-                }
-                404 -> {
-                    // no such container
-                }
+                204 -> fire(ExperimentStartedEvent(experiment)) // 实验启动完成
+                304 -> fire(ContainerNameConflictEvent(experiment)) // 实验已启动，重复启动错误
+                404 -> fire(ContainerNotFoundEvent(experiment)) // 找不到容器
             }
         }
     }
@@ -73,16 +62,9 @@ class DockerController : Controller() {
     private fun stopContainer(experiment: Experiment) {
         api.post("/containers/${experiment.containerID}/stop").let {
             when (it.statusCode) {
-                204 -> {
-                    // can't change ui in background thread
-                    // experiment.state = false
-                }
-                304 -> {
-                    // already stop
-                }
-                404 -> {
-                    // no such container
-                }
+                204 -> fire(ExperimentStoppedEvent(experiment)) // 实验停止完成
+                304 -> fire(ContainerNameConflictEvent(experiment)) // 重复停止
+                404 -> fire(ContainerNotFoundEvent(experiment)) // 找不到容器
             }
         }
     }
@@ -96,11 +78,21 @@ class DockerController : Controller() {
             when(it.statusCode) {
                 200 -> {
 //                  image pull is a keep alive request
+                    BufferedReader(InputStreamReader(it.content())).use { buffer ->
+                        while (true) {
+                            val json = loadJsonObject(buffer.readLine()) ?: break
+                            if ("Downloading" == json.getString("status")) {
+                                // 解析进度
+                                with(json.getJsonObject("progressDetail")) {
+                                    val progress = getDouble("current") / getDouble("total")
+                                    fire(PullImageEvent(experiment, progress))
+                                }
+                            }
+                        }
+                    }
                     runContainer(experiment)
                 }
-                404 -> {
-                    // image does not exist or can't read image
-                }
+                404 -> fire(ImageNotFoundEvent(experiment))
             }
         }
     }
