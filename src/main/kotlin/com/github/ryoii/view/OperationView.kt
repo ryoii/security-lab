@@ -50,7 +50,9 @@ class OperationView : View() {
 
             buttonbar {
                 button(stringBinding(experimentModel.state) { if (value) "停止" else "运行" }).action {
-
+                    with(experimentModel.item) {
+                        state = !state
+                    }
                 }
             }
         }
