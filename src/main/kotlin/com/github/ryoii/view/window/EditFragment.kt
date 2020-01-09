@@ -9,7 +9,7 @@ import tornadofx.*
 
 class EditFragment : Fragment() {
 
-    private val experimentController by inject<ExperimentController>(DefaultScope)
+    private val experimentController by inject<ExperimentController>(FX.defaultScope)
     private val experimentModel by inject<ExperimentModel>()
 
     override val root = borderpane {

@@ -6,7 +6,7 @@ import tornadofx.*
 
 class InfoFragment : Fragment() {
 
-    private val experimentController by inject<ExperimentController>(DefaultScope)
+    private val experimentController by inject<ExperimentController>(FX.defaultScope)
     private val experimentModel by inject<ExperimentModel>()
 
     override val root = flowpane {
