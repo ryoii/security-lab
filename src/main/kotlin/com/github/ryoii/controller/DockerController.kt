@@ -80,7 +80,8 @@ class DockerController : Controller() {
 //                  image pull is a keep alive request
                     BufferedReader(InputStreamReader(it.content())).use { buffer ->
                         while (true) {
-                            val json = loadJsonObject(buffer.readLine()) ?: break
+                            val line = buffer.readLine() ?: break
+                            val json = loadJsonObject(line)
                             if ("Downloading" == json.getString("status")) {
                                 // 解析进度
                                 with(json.getJsonObject("progressDetail")) {
