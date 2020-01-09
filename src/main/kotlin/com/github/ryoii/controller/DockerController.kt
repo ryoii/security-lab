@@ -13,7 +13,7 @@ import java.util.*
 class DockerController : Controller() {
 
     private val globalInfo = find<GlobalInfoModel>().item
-    val api by inject<Rest>()
+    private val api by inject<Rest>()
 
     init {
         Rest.engineProvider = ::HttpsURLEngine
